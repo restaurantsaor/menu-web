@@ -1,0 +1,789 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Restaurant Saor</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(120deg, #8B0000, #B22222);
+      color: white;
+      text-align: center;
+      padding: 2.5rem 1rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    header h1 {
+      font-size: 2.8rem;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      letter-spacing: 1px;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      opacity: 0.95;
+      max-width: 700px;
+      margin: 0 auto;
+      font-weight: 300;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .categories-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin: 2rem 0 3rem;
+    }
+
+    .category-btn {
+      background: white;
+      border: 2px solid #8B0000;
+      color: #8B0000;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 120px;
+    }
+
+    .category-btn:hover {
+      background: #8B0000;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(139, 0, 0, 0.3);
+    }
+
+    .category-btn.active {
+      background: #8B0000;
+      color: white;
+      box-shadow: 0 4px 12px rgba(139, 0, 0, 0.4);
+    }
+
+    .menu-section {
+      margin-bottom: 3rem;
+      display: none;
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    .menu-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.2rem;
+      color: #8B0000;
+      margin-bottom: 2rem;
+      position: relative;
+      padding-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(90deg, #DC143C, #FF4500, #DC143C);
+      border-radius: 2px;
+    }
+
+    .dishes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2.2rem;
+    }
+
+    .dish-card {
+      background: white;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid #f1f3f5;
+    }
+
+    .dish-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.18);
+    }
+
+    .dish-image {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .dish-content {
+      padding: 1.8rem;
+    }
+
+    .dish-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 0.8rem;
+    }
+
+    .dish-description {
+      color: #555;
+      margin-bottom: 1.2rem;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .dish-price {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #8B0000;
+      text-align: right;
+    }
+
+    footer {
+      background: #2c3e50;
+      color: white;
+      text-align: center;
+      padding: 2.5rem 1rem;
+      margin-top: 3rem;
+    }
+
+    footer p {
+      margin: 0.8rem 0;
+      opacity: 0.9;
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2.2rem;
+      }
+      
+      .categories-nav {
+        gap: 8px;
+      }
+      
+      .category-btn {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+        min-width: 100px;
+      }
+      
+      .section-title {
+        font-size: 1.8rem;
+      }
+      
+      .dishes-grid {
+        grid-template-columns: 1fr;
+        gap: 1.8rem;
+      }
+      
+      .dish-content {
+        padding: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+      
+      header p {
+        font-size: 1rem;
+      }
+      
+      .categories-nav {
+        gap: 6px;
+      }
+      
+      .category-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        min-width: 80px;
+      }
+      
+      .section-title {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Restaurant Saor</h1>
+    <p>Autenticidad y sabor en cada plato • Cocina tradicional con toques modernos</p>
+  </header>
+
+  <div class="container">
+    <!-- Botones de categorías -->
+    <div class="categories-nav">
+      <button class="category-btn active" data-section="entrantes">Entrantes</button>
+      <button class="category-btn" data-section="hamburguesas">Hamburguesas</button>
+      <button class="category-btn" data-section="mar">Mar</button>
+      <button class="category-btn" data-section="montana">Montaña</button>
+      <button class="category-btn" data-section="pizzas">Pizzas</button>
+      <button class="category-btn" data-section="pasta">Pasta</button>
+      <button class="category-btn" data-section="postres">Postres</button>
+    </div>
+
+    <!-- ENTRANTES -->
+    <section class="menu-section active" id="entrantes">
+      <h2 class="section-title">Entrantes</h2>
+      <div class="dishes-grid">
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/8B0000/ffffff?text=ANDALUSÍ" alt="ANDALUSÍ" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">ANDALUSÍ</h3>
+            <p class="dish-description">Ensalada de pollo, cebolla y zanahoria en escabeche, corazón de lechuga y endivia.</p>
+            <div class="dish-price">€10.00</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/B22222/ffffff?text=PERÍN" alt="PERÍN" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">PERÍN</h3>
+            <p class="dish-description">Ensalada de rúcula, pera en almíbar, jamón curado, queso de cabra y frutos secos.</p>
+            <div class="dish-price">€12.00</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/DC143C/ffffff?text=CARACOLES+CON+SALSA" alt="CARACOLES CON SALSA" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">CARACOLES CON SALSA</h3>
+            <p class="dish-description">Caracoles cocinados a fuego lento con una salsa de verduras y cerdo con un toque especiado.</p>
+            <div class="dish-price">€10.00</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/FF4500/ffffff?text=OREJA+DE+CERDO" alt="OREJA DE CERDO" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">OREJA DE CERDO</h3>
+            <p class="dish-description">Oreja entera de cerdo guisada, perfecta para compartir.</p>
+            <div class="dish-price">€8.00</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/8B0000/ffffff?text=PULPITOS+ENCEBOLLADOS" alt="PULPITOS ENCEBOLLADOS" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">PULPITOS ENCEBOLLADOS</h3>
+            <p class="dish-description">Pulpitos encebollados acompañados de parmentier de patata.</p>
+            <div class="dish-price">€12.00</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/B22222/ffffff?text=CROQUETAS+CASERAS" alt="CROQUETAS CASERAS" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">CROQUETAS CASERAS</h3>
+            <p class="dish-description">Croquetas caseras. Pregúntanos por las variedades disponibles.</p>
+            <div class="dish-price">€2.50/u</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/DC143C/ffffff?text=TORREZNO+DE+SORIA" alt="TORREZNO DE SORIA" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">TORREZNO DE SORIA</h3>
+            <p class="dish-description">Crujiente y sabroso torrezno de Soria acompañado de pimientos.</p>
+            <div class="dish-price">€6.00/u</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/FF4500/ffffff?text=PATATAS+CON+ALIOLI" alt="PATATAS CON ALIOLI" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">PATATAS CON ALIOLI</h3>
+            <p class="dish-description">Patatas fritas caseras, servidas con alioli y pimentón.</p>
+            <div class="dish-price">€7.00</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/8B0000/ffffff?text=PATATAS+CON+QUESO" alt="PATATAS CON QUESO Y BACON" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">PATATAS CON QUESO Y BACON</h3>
+            <p class="dish-description">Patatas fritas caseras, bacon crujiente y salsa de queso gouda.</p>
+            <div class="dish-price">€7.50</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/B22222/ffffff?text=PATATAS+PULLED+PORK" alt="PATATAS PULLED PORK" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">PATATAS PULLED PORK</h3>
+            <p class="dish-description">Patatas fritas caseras, acompañadas de pulled pork casero.</p>
+            <div class="dish-price">€8.00</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/DC143C/ffffff?text=PATATAS+TRUFADAS" alt="PATATAS TRUFADAS" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">PATATAS TRUFADAS</h3>
+            <p class="dish-description">Patatas con yema de huevo y un toque de crema de trufa.</p>
+            <div class="dish-price">€8.00</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/FF4500/ffffff?text=PAN+DE+AJO" alt="PAN DE AJO" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">PAN DE AJO</h3>
+            <p class="dish-description">Pan de pizza con aceite de ajo, perejil y mozzarella fior di latte.</p>
+            <div class="dish-price">€4.50</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/8B0000/ffffff?text=PAN+CON+PIMENTÓN" alt="PAN CON PIMENTÓN" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">PAN CON PIMENTÓN</h3>
+            <p class="dish-description">Pan de pizza con aceite de oliva, Pimentón de la Vera DOP y mozzarella fior di latte.</p>
+            <div class="dish-price">€4.50</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/B22222/ffffff?text=RACIÓN+DE+PA" alt="RACIÓN DE PA" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">RACIÓN DE PA</h3>
+            <p class="dish-description"></p>
+            <div class="dish-price">€1.20</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HAMBURGUESAS -->
+    <section class="menu-section" id="hamburguesas">
+      <h2 class="section-title">Hamburguesas</h2>
+      <div class="dishes-grid">
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/FF4500/ffffff?text=LA+GEORGIE+DAN" alt="LA GEORGIE DAN" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">LA GEORGIE DAN</h3>
+            <p class="dish-description">Hamburguesa de angus de 180 g en pan brioche con queso cheddar, bacon, cebolla caramelizada y salsa BBQ ahumada.</p>
+            <div class="dish-price">€11.50</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/8B0000/ffffff?text=LA+VEGETA" alt="LA VEGETA" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">LA VEGETA</h3>
+            <p class="dish-description">Hamburguesa vegetal en pan brioche, queso cheddar y verdura a la plancha.</p>
+            <div class="dish-price">€11.50</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/B22222/ffffff?text=LA+LEONESA" alt="LA LEONESA" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">LA LEONESA</h3>
+            <p class="dish-description">Hamburguesa de angus de 180 g en pan brioche con queso cheddar, cecina de km 0 y huevo a la plancha.</p>
+            <div class="dish-price">€12.50</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/DC143C/ffffff?text=LA+PULLED" alt="LA PULLED" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">LA PULLED</h3>
+            <p class="dish-description">Hamburguesa de angus de 180 g en pan brioche con queso cheddar, pulled pork casero y cebolla.</p>
+            <div class="dish-price">€13.00</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/FF4500/ffffff?text=LA+AGRIDULCE" alt="LA AGRIDULCE" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">LA AGRIDULCE</h3>
+            <p class="dish-description">Hamburguesa de angus de 180 g en pan brioche con rulo de cabra, chutney casero de pepinillos agridulces y cebolla morada.</p>
+            <div class="dish-price">€13.00</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAR -->
+    <section class="menu-section" id="mar">
+      <h2 class="section-title">Mar</h2>
+      <div class="dishes-grid">
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/20B2AA/ffffff?text=SUQUET+DE+PEIX" alt="SUQUET DE PEIX" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">SUQUET DE PEIX</h3>
+            <p class="dish-description">Guiso marinero con rape, gambones y mejillones.</p>
+            <div class="dish-price">€12.00</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/4682B4/ffffff?text=BACALAO" alt="BACALAO" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">BACALAO</h3>
+            <p class="dish-description">Lomo de bacalao acompañado de un parmentier de patatas, cebolla y pimientos.</p>
+            <div class="dish-price">€12.00</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/5F9EA0/ffffff?text=PULPO+A+LA+PLANCHA" alt="PULPO A LA PLANCHA" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">PULPO A LA PLANCHA</h3>
+            <p class="dish-description">Pulpo de roca marcado a la plancha, servido sobre un suave parmentier de patatas, aceite de oliva y pimentón.</p>
+            <div class="dish-price">€26.00</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MONTAÑA -->
+    <section class="menu-section" id="montana">
+      <h2 class="section-title">Montaña</h2>
+      <div class="dishes-grid">
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/8B0000/ffffff?text=MANITAS+DE+CERDO" alt="MANITAS DE CERDO" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">MANITAS DE CERDO</h3>
+            <p class="dish-description">Manitas de cerdo guisadas con salsa.</p>
+            <div class="dish-price">€9.50</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/B22222/ffffff?text=TOMBET+DE+CORDERO" alt="TOMBET DE CORDERO" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">TOMBET DE CORDERO</h3>
+            <p class="dish-description">Guiso de cordero a fuego lento con salsa de ajos, cebolla y zanahoria.</p>
+            <div class="dish-price">€12.50</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/DC143C/ffffff?text=PATO+PELEGRÍ" alt="PATO PELEGRÍ" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">PATO PELEGRÍ</h3>
+            <p class="dish-description">Base de cebolla y patatas confitadas, yema de huevo pasteurizada, pato del Mas de Pelegrí y cebollino.</p>
+            <div class="dish-price">€12.90</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/FF4500/ffffff?text=CHURRASCO" alt="CHURRASCO" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">CHURRASCO</h3>
+            <p class="dish-description">Churrasco de ternera acompañado de guarnición.</p>
+            <div class="dish-price">€13.00</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/8B0000/ffffff?text=COSTILLA+A+LA+MIEL" alt="COSTILLA A LA MIEL" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">COSTILLA A LA MIEL</h3>
+            <p class="dish-description">Costilla de cerdo horneada con miel y mostaza con un toque de salsa de soja.</p>
+            <div class="dish-price">€12.90</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PIZZAS -->
+    <section class="menu-section" id="pizzas">
+      <h2 class="section-title">Pizzas</h2>
+      <div class="dishes-grid">
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/DC143C/ffffff?text=MARGARITA" alt="MARGARITA" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">MARGARITA</h3>
+            <p class="dish-description">La clásica con base de tomate, mozzarella fior di latte, hojas de albahaca fresca y aceite de oliva.</p>
+            <div class="dish-price">€8.90</div>
+          </div>
+        </div>
+
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/FF4500/ffffff?text=PROSCIUTTO" alt="PROSCIUTTO" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">PROSCIUTTO</h3>
+            <p class="dish-description">Base de tomate, mozzarella fior di latte y jamón cocido de Benassal.</p>
+            <div class="dish-price">€9.50</div>
+          </div>
+        </div>
+
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/8B0000/ffffff?text=PROSCIUTTO+E+FUNGHI" alt="PROSCIUTTO E FUNGHI" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">PROSCIUTTO E FUNGHI</h3>
+            <p class="dish-description">Base de tomate, mozzarella fior di latte, jamón cocido de Benassal y champiñones frescos.</p>
+            <div class="dish-price">€10.50</div>
+          </div>
+        </div>
+
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/B22222/ffffff?text=CALZONE" alt="CALZONE" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">CALZONE</h3>
+            <p class="dish-description">La versión cerrada de la prosciutto e funghi.</p>
+            <div class="dish-price">€10.50</div>
+          </div>
+        </div>
+
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/DC143C/ffffff?text=VEGETAL" alt="VEGETAL" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">VEGETAL</h3>
+            <p class="dish-description">Opción vegetal con base de tomate, fior di latte, calabacín, berenjena y tiras de zanahoria frita.</p>
+            <div class="dish-price">€10.50</div>
+          </div>
+        </div>
+
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/FF4500/ffffff?text=CAPRICHOSA" alt="CAPRICHOSA" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">CAPRICHOSA</h3>
+            <p class="dish-description">Base de tomate, mozzarella fior di latte, aceitunas, champiñones y jamón cocido de Benassal.</p>
+            <div class="dish-price">€11.50</div>
+          </div>
+        </div>
+
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/8B0000/ffffff?text=PEPPERONI" alt="PEPPERONI" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">PEPPERONI</h3>
+            <p class="dish-description">Base de tomate, mozzarella fior di latte, pepperoni y miel picante.</p>
+            <div class="dish-price">€12.00</div>
+          </div>
+        </div>
+
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/B22222/ffffff?text=RÚSTICA" alt="RÚSTICA" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">RÚSTICA</h3>
+            <p class="dish-description">Base de tomate, mozzarella fior di latte, longaniza de Chert y huevo.</p>
+            <div class="dish-price">€12.00</div>
+          </div>
+        </div>
+
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/DC143C/ffffff?text=BARBACOA" alt="BARBACOA" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">BARBACOA</h3>
+            <p class="dish-description">Base de tomate, mozzarella fior di latte, bacon, jamón cocido de Benassal y un toque de salsa BBQ.</p>
+            <div class="dish-price">€12.50</div>
+          </div>
+        </div>
+
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/FF4500/ffffff?text=LÁCTICA" alt="LÁCTICA" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">LÁCTICA</h3>
+            <p class="dish-description">Para los amantes del queso, mozzarella fior di latte, una mezcla de quesos de proximidad, nacionales e italianos y nueces.</p>
+            <div class="dish-price">€12.90</div>
+          </div>
+        </div>
+
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/8B0000/ffffff?text=GUZMÁN" alt="GUZMÁN" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">GUZMÁN</h3>
+            <p class="dish-description">Base de crema de dátils, mozzarella fior di latte, bacon y queso brie.</p>
+            <div class="dish-price">€12.50</div>
+          </div>
+        </div>
+
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/B22222/ffffff?text=BELLÉS" alt="BELLÉS" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">BELLÉS</h3>
+            <p class="dish-description">Base de crema de trufa, mozzarella fior di latte, huevo y jamón serrano (a elegir entre horneado o crudo).</p>
+            <div class="dish-price">€13.50</div>
+          </div>
+        </div>
+
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/DC143C/ffffff?text=PETRICOR" alt="PETRICOR" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">PETRICOR</h3>
+            <p class="dish-description">Base de crema de calabaza asada, mozzarella fior di latte, setas salteadas con ajo, pancetta arrotolata y almendra molida.</p>
+            <div class="dish-price">€13.50</div>
+          </div>
+        </div>
+
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/FF4500/ffffff?text=CABUDETA" alt="CABUDETA" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">CABUDETA</h3>
+            <p class="dish-description">Base de queso crema con ajo horneado, mozzarella fior di latte, rúcula, cabeza de lomo de cerdo curado, escamas de Grana Padano y reducción de balsámico.</p>
+            <div class="dish-price">€13.50</div>
+          </div>
+        </div>
+
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/8B0000/ffffff?text=CARBONARA+IBÉRICA" alt="CARBONARA IBÉRICA" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">CARBONARA IBÉRICA</h3>
+            <p class="dish-description">Base de mozzarella fior di latte, panceta ibérica de bellota, yema de huevo, pimienta negra y queso curado de oveja.</p>
+            <div class="dish-price">€12.50</div>
+          </div>
+        </div>
+
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/B22222/ffffff?text=CARBONARA+TRUFAETA" alt="CARBONARA TRUFAETA" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">CARBONARA TRUFAETA</h3>
+            <p class="dish-description">Base de crema de trufa, mozzarella fior di latte, panceta ibérica de bellota, yema de huevo, pimienta negra y queso curado de oveja.</p>
+            <div class="dish-price">€14.50</div>
+          </div>
+        </div>
+
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/DC143C/ffffff?text=CARBONARA+SICHUAN" alt="CARBONARA SICHUAN" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">CARBONARA SICHUAN</h3>
+            <p class="dish-description">Base de salsa hoisin, mozzarella fior di latte, panceta ibérica de bellota, setas shiitake salteadas con ajo, yema de huevo pasteurizada, cebollino y pimienta de Sichuan molida.</p>
+            <div class="dish-price">€14.50</div>
+          </div>
+        </div>
+
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/FF4500/ffffff?text=CARMETA" alt="CARMETA" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">CARMETA</h3>
+            <p class="dish-description">Base de tomate, mozzarella fior di latte, champiñones, cecina, burrata y miel.</p>
+            <div class="dish-price">€14.90</div>
+          </div>
+        </div>
+
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/8B0000/ffffff?text=MORTADELO" alt="MORTADELO" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">MORTADELO</h3>
+            <p class="dish-description">Base de pesto de albahaca casero, mozzarella fior di latte, mortadela italiana, burrata y pistacho molido.</p>
+            <div class="dish-price">€14.90</div>
+          </div>
+        </div>
+
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/B22222/ffffff?text=VINAROSSENCA" alt="VINAROSSENCA" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">VINAROSSENCA</h3>
+            <p class="dish-description">Base de tomate, mozzarella fior di latte, alcachofas, aceitunas negras, boqueron de Vinaroz y aceite de ajo y perejil.</p>
+            <div class="dish-price">€14.90</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PASTA -->
+    <section class="menu-section" id="pasta">
+      <h2 class="section-title">Pasta</h2>
+      <div class="dishes-grid">
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/8B0000/ffffff?text=CANELONES+DE+CARNE" alt="CANELONES DE CARNE" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">CANELONES DE CARNE</h3>
+            <p class="dish-description">Canelones caseros rellenos de cerdo y pollo, cubiertos de bechamel y queso gratinados al horno.</p>
+            <div class="dish-price">€12.00</div>
+          </div>
+        </div>
+        
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/B22222/ffffff?text=CANELONES+DE+SETAS" alt="CANELONES DE SETAS Y TRUFA" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">CANELONES DE SETAS Y TRUFA</h3>
+            <p class="dish-description">Canelones caseros rellenos de una mezcla de setas, trufa, bechamel y queso gratinados al horno.</p>
+            <div class="dish-price">€12.00</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- POSTRES -->
+    <section class="menu-section" id="postres">
+      <h2 class="section-title">Postres</h2>
+      <div class="dishes-grid">
+        <div class="dish-card">
+          <img src="https://placehold.co/400x300/C0392B/ffffff?text=LOS+POSTRES+DE+MANOLI" alt="LOS POSTRES DE MANOLI" class="dish-image">
+          <div class="dish-content">
+            <h3 class="dish-name">LOS POSTRES DE MANOLI</h3>
+            <p class="dish-description"></p>
+            <div class="dish-price">€4.50</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>📍 C/LORETO, 6 • 12181 BENLLOC</p>
+    <p>📞 +34 624 756 796 • 📧 restaurantsaor@outlook.es</p> 
+    <p>📸 @saor.restaurant</p>
+    <p>🕒 Lunes : 9:00 - 12:30</p>
+    <p>🕒 Jueves : 13:00 - 16:00 / 19:00-23:00</p>
+    <p>🕒 Viernes : 9:00 - 16:00 / 19:00-00:00</p>
+    <p>🕒 Sabado : 9:00 - 00:00</p>
+    <p>🕒 Domingo : 9:00 -16:30 / 19:00-23:00</p>
+  </footer>
+
+  <script>
+    // Funcionalidad de los botones de categorías
+    document.addEventListener('DOMContentLoaded', function() {
+      const categoryButtons = document.querySelectorAll('.category-btn');
+      const menuSections = document.querySelectorAll('.menu-section');
+      
+      categoryButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          // Remover clase active de todos los botones
+          categoryButtons.forEach(btn => btn.classList.remove('active'));
+          // Añadir clase active al botón clicado
+          this.classList.add('active');
+          
+          // Ocultar todas las secciones
+          menuSections.forEach(section => section.classList.remove('active'));
+          
+          // Mostrar la sección correspondiente
+          const sectionId = this.getAttribute('data-section');
+          document.getElementById(sectionId).classList.add('active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
+```
